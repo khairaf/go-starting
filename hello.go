@@ -39,6 +39,7 @@ list of the Go language types:
 -complex64 complex128
 */
 
+/*
 package main
 
 import "fmt"
@@ -61,7 +62,7 @@ func main() {
 	fmt.Print(greeting(greet1, greet2))
 
 }
-
+*/
 /*
 When you define, if you don't assign a value, strings default to "", booleans default to false and numerical types default to 0.
 
@@ -72,5 +73,21 @@ When you define, if you don't assign a value, strings default to "", booleans de
 
 	var x float32
 	y := x // y is float32 type
-	
+
 */
+
+//pointer
+package main
+
+import "fmt"
+
+func main(){
+	x := 15
+	fmt.Println(x)
+	a := &x //&x points ke memori addrss x
+	fmt.Println(a) //bakal ngeprint memoru addresnya: 0xc000052080
+	fmt.Println(*a) //bakal ngeprint value dari variable tersebut :15
+	*a = 5
+	fmt.Println(x) //5
+	
+}
