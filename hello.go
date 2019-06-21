@@ -76,18 +76,35 @@ When you define, if you don't assign a value, strings default to "", booleans de
 
 */
 
-//pointer
+// //pointer
+// package main
+
+// import "fmt"
+
+// func main(){
+// 	x := 15
+// 	fmt.Println(x)
+// 	a := &x //&x points ke memori addrss x
+// 	fmt.Println(a) //bakal ngeprint memoru addresnya: 0xc000052080
+// 	fmt.Println(*a) //bakal ngeprint value dari variable tersebut :15
+// 	*a = 5
+// 	fmt.Println(x) //5
+	
+// }
+
+//Looping
 package main
 
 import "fmt"
 
 func main(){
-	x := 15
-	fmt.Println(x)
-	a := &x //&x points ke memori addrss x
-	fmt.Println(a) //bakal ngeprint memoru addresnya: 0xc000052080
-	fmt.Println(*a) //bakal ngeprint value dari variable tersebut :15
-	*a = 5
-	fmt.Println(x) //5
-	
+	for i:=0; i<10; i++ {
+		fmt.Println(i)
+	}
+
+	a := 3
+	for x:=5; a <25; x+=3{
+		fmt.Println("Do stuff",x, a)
+		a+=4
+	}
 }

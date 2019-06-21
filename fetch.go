@@ -52,12 +52,17 @@ func main() {
 	var s Sitemapindex
 	xml.Unmarshal(bytes, &s)
 	
-	fmt.Println(s.Locations)
+	//fmt.Println(s.Locations)
+
+	for _, Location := range s.Locations {
+		fmt.Printf("%s\n", Location)
+	}	
 }
 
 //An array with 6 integers might look something like: var ArrExample [6]int.
 //How about a slice? We could make a slice with SliceExample []float32. This would be a slice that's made up for float32 values.
 
+/*
 // package main
 
 // import (
@@ -97,3 +102,4 @@ func main() {
 //   xml.Unmarshal(bytes, &s)
 //   fmt.Println(s.Locations)
 // }
+*/
