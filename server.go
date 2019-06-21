@@ -25,3 +25,5 @@ func main() {
 	http.HandleFunc("/about/", about_handler)
 	http.ListenAndServe(":8000", nil) //nill = nothing to pass as server argument
 }
+
+//http://127.0.0.1:8000/ or view-source:http://127.0.0.1:8000/
