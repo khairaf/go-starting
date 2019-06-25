@@ -13,7 +13,7 @@ func main (){
 	go foo(fooVal, 3)
 
 	v1, v2 := <- fooVal, <- fooVal
-	fmt.Println(v1, v2)
+	fmt.Println(v1, v2) //15 25
 }
 
 // <- adalah channel operator
