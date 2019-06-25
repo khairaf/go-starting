@@ -7,7 +7,10 @@ import (
 	"encoding/xml"
 	"io/ioutil"
 	"strings"
+	"sync"
 )
+
+var wg sync.WaitGroup
 
 type NewsMap struct {
 	Keyword string
@@ -44,9 +47,26 @@ func about_handler(w http.ResponseWriter, r *http.Request){
 	fmt.Fprintf(w, "Ini adalah an about page")
 }
 
+func newsRoutine(c chan News, Location string){
+	defer wg.Done()
+	var n News
+	t := strings.TrimSpace(Location)
+	resp, err := http.Get(t)
+	if err != nil {
+		fmt.Printf("errornya: %v\n", err)
+	}
+	bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("error di: %v\n", err)
+	}
+	xml.Unmarshal(bytes, &n)
+	resp.Body.Close()
+	c <- n
+}
+
 func newsAggHandler (w http.ResponseWriter, r *http.Request){
 	var s Sitemapindex
-	var n News
+	//var n News
 	news_map := make(map[string]NewsMap)
 	resp, err := http.Get("https://www.washingtonpost.com/news-sitemaps/index.xml")
 	if err != nil {
@@ -58,25 +78,20 @@ func newsAggHandler (w http.ResponseWriter, r *http.Request){
 	}
 	
 	xml.Unmarshal(bytes, &s)
-	
+	resp.Body.Close()
+	queue := make(chan News, 30)
 
 	for _, Location := range s.Locations {
 		t := strings.TrimSpace(Location)
-		resp, err := http.Get(t)
-		if err != nil {
-			fmt.Printf("errornya: %v\n", err)
-		}
+		wg.Add(1)
+		go newsRoutine(queue, t)
+	}
+	wg.Wait()
+	close(queue)
 
-		bytes, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			fmt.Printf("error di: %v\n", err)
-		}
-
-		xml.Unmarshal(bytes, &n)
-		
-		
-		for idx, _ := range n.Keywords {
-			news_map[n.Titles[idx]] = NewsMap{n.Keywords[idx], n.Locations[idx]}
+	for elem := range queue {
+		for idx, _ := range elem.Keywords {
+		news_map[elem.Titles[idx]] = NewsMap{elem.Keywords[idx], elem.Locations[idx]}
 		}
 	}
 
@@ -93,3 +108,13 @@ func main() {
 }
 
 //http://127.0.0.1:8000/ or view-source:http://127.0.0.1:8000/
+
+/*
+	bytes, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Printf("error di: %v\n", err)
+		}
+
+		xml.Unmarshal(bytes, &n)
+		resp.Body.Close()
+*/
